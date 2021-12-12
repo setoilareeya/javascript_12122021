@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Angular Demo</title>
+  <meta name="viewport" content="width=device-width">
+ </head>
+ <body>
+  <show>...</show>
+ </body>
+
+ <style>
+   .report {
+   font-family: sans-serif;
+   color: #222;
+   background-color: #eef;
+   min-height: 3rem;
+   display: flex;
+   flex-direction: row;
+  }
+  .report > *:first-child {
+   width: 200px;
+   background-color: #efe;
+  }
+  .report > *:last-child {
+   width: 300px;
+   background-color: #fee;
+  }
+  .fill {
+   flex-grow: 100;
+  }
+ </style>
+ <script type="text/typescript">
+  let { Component } = ng.core
+
+  @Component({
+    selector: 'show',
+    template: `<div class='report'>
+     <div>
+      <input #number (keyup)="show(number, type)">
+      <p>Value {{target}}</p>
+     </div>
+     <div class='fill'>
+      <select #type (change)="show(number, type)">
+       <option *ngFor="let i of list">{{i}}</option>
+      </select>
+     </div>
+     <div>
+      {{result}}
+     </div>
+    </div>`
+   })
+   class Show {
+    constructor() {
+     this.list = ['isPrime', 'isFibonacci'];
+     this.target = 1;
+     this.result = '...';
+    }
+    show(number, type) {
+      this.target = +number.value || 1;
+      this.target = Math.round(this.target);
+      if (this.target < 0) {
+       this.target = 1;
+      }
+      if (type.value === "isPrime") {
+       this.checkPrime();
+      }
+      if (type.value === "isFibonacci") {
+       this.checkFibonacci();
+      }
+     }
+     checkPrime() {
+      let flag = true;
+      if (this.target == 1) {
+       flag = false;
+      }
+      if (this.target >= 4 && this.target % 2 == 0) {
+       flag = false;
+      }
+      let root = Math.sqrt(this.target);
+      root = Math.round(root);
+      for (let i = 3; i <= root; i += 2) {
+       if (this.target % i == 0) {
+        flag = false;
+       }
+      }
+      this.result = flag;
+     }
+
+     checkFibonacci() {
+      let flag = false;
+      let previous = 0;
+      let number = 1;
+      while (number <= this.target) {
+       if (this.target == number) {
+        flag = true;
+        break;
+       }
+       let temporary = number;
+       number = number + previous;
+       previous = temporary;
+      }
+      this.result = flag;
+     }
+    }
+    let { NgModule } = ng.core;
+    let { BrowserModule } = ng.platformBrowser;
+    let { platformBrowserDynamic } = ng.platformBrowserDynamic;
+  
+    @NgModule({
+     declarations: [ Show ],
+     bootstrap:    [ Show ],
+     imports:      [ BrowserModule ],
+    })
+    class Main { }
+  
+    platformBrowserDynamic().bootstrapModule(Main)
+   </script>
+
+    <!--
+ <script src="https://unpkg.com/core-js@2.6.5/client/shim.min.js"></script>
+ -->
+ <script src="https://unpkg.com/zone.js@0.8.29/dist/zone.min.js"></script>
+ <script src="https://unpkg.com/rxjs@6.4.0/bundles/rxjs.umd.min.js"></script>
+ <script src="https://unpkg.com/@angular/core@12.2.12/bundles/core.umd.js"></script>
+ <script src="https://unpkg.com/@angular/common@12.2.12/bundles/common.umd.js"></script>
+ <script src="https://unpkg.com/@angular/compiler@12.2.12/bundles/compiler.umd.js"></script>
+ <script src="https://unpkg.com/@angular/platform-browser@12.2.12/bundles/platform-browser.umd.js"></script>
+ <script src="https://unpkg.com/@angular/platform-browser-dynamic@12.2.12/bundles/platform-browser-dynamic.umd.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/typescript/4.4.4/typescript.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/gh/basarat/typescript-script@master/transpiler.js"></script>
+
+</html>
+
+

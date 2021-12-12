@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Angular Demo</title>
+  <meta name="viewport" content="width=device-width">
+ </head>
+ <body>
+  <search>...</search>
+ </body>
+
+ <script type="text/typescript">
+  let { Component } = ng.core
+
+  @Component({
+   selector: 'search',
+   template: `
+    <input #text (keyup)='typing(text)'>
+    
+    <ul><li *ngFor="let i of matched">{{i}}</li><ul>
+   `
+  })
+  class Search {
+    constructor() {
+     this.url = "https://api.publicapis.org/categories";
+     this.all = [ ];
+     this.matched = [ ];
+     this.refresh();
+    }
+    async refresh() {
+      let response = await fetch(this.url);
+      this.all = await response.json();
+      this.matched = this.all;
+     }
+     typing(text) {
+      let pattern = text.value.toUpperCase();
+      let temporary = [ ];
+      for (let i of this.all) {
+       if (i.toUpperCase().indexOf(pattern) >= 0) {
+        temporary.push(i);
+       }
+      }
+      this.matched = temporary;
+     }
+    }
+    let { NgModule } = ng.core;
+    let { BrowserModule } = ng.platformBrowser;
+    let { platformBrowserDynamic } = ng.platformBrowserDynamic;
+  
+    @NgModule({
+      declarations: [ Search ],
+      bootstrap:    [ Search ],
+      imports:      [ BrowserModule ],
+     })
+     class Main { }
+   
+     platformBrowserDynamic().bootstrapModule(Main);
+    </script>
+
+    <!--
+ <script src="https://unpkg.com/core-js@2.6.5/client/shim.min.js"></script>
+ -->
+ <script src="https://unpkg.com/zone.js@0.8.29/dist/zone.min.js"></script>
+ <script src="https://unpkg.com/rxjs@6.4.0/bundles/rxjs.umd.min.js"></script>
+ <script src="https://unpkg.com/@angular/core@12.2.12/bundles/core.umd.js"></script>
+ <script src="https://unpkg.com/@angular/common@12.2.12/bundles/common.umd.js"></script>
+ <script src="https://unpkg.com/@angular/compiler@12.2.12/bundles/compiler.umd.js"></script>
+ <script src="https://unpkg.com/@angular/platform-browser@12.2.12/bundles/platform-browser.umd.js"></script>
+ <script src="https://unpkg.com/@angular/platform-browser-dynamic@12.2.12/bundles/platform-browser-dynamic.umd.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/typescript/4.4.4/typescript.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/gh/basarat/typescript-script@master/transpiler.js"></script>
+</html>
+
